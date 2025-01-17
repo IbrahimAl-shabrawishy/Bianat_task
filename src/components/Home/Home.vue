@@ -1,12 +1,15 @@
 <template>
-    <div v-if="loading">Loading...</div>
+    <div v-if="loading">
+
+        <loading />
+    </div>
     <div v-else-if="error">Error: {{ error.message }}</div>
     <div v-else class="flex flex-wrap justify-center">
         <div v-for="product in paginatedProducts" :key="product.id">
             <div
                 class="relative card m-10 flex w-full max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md">
                 <a class="relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl" href="#">
-                    <img class="object-cover w-full"
+                    <img loading="lazy" class="object-cover w-full"
                         :src="product.images && product.images.length > 0 ? product.images[0] : imgDefault"
                         :alt="product.title.split(' ').slice(0, 2).join('') || 'Default Image'"
                         @error="handleImageError" />
@@ -48,9 +51,15 @@ import { useQuery } from '@vue/apollo-composable';
 import gql from 'graphql-tag';
 import { ref, computed, onMounted } from 'vue';
 import imgDefault from '../../assets/istockphoto-1409329028-612x612.jpg';
+import Loading from '../../components/Loading/Loading.vue';
+
 
 export default {
+    components: {
+        Loading
+    },
     setup() {
+
         const GET_PRODUCTS = gql`
         query {
             products {

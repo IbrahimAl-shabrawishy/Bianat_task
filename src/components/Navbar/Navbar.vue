@@ -1,4 +1,5 @@
 <template>
+
     <div Class="text-center font-bold">
         <h1>BEST SELLER</h1>
     </div>
@@ -49,7 +50,9 @@
 </template>
 
 <script>
+
 export default {
+
     data() {
         return {
             isMenuOpen: false,
