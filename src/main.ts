@@ -5,6 +5,7 @@ import  {createMetaManager } from 'vue-meta';
 import './style.css'; // تأكد من أن هذا السطر موجود
 import App from './App.vue';
 import './index.css';
+import { createPinia } from 'pinia';
 
 import router from "../src/router";
 
@@ -18,6 +19,7 @@ const app = createApp({
   },
   render: () => h(App),
 });
+const pinia=createPinia();
 
 // إنشاء وإعداد MetaManager
 const metaManager = createMetaManager(); 
@@ -25,6 +27,6 @@ const metaManager = createMetaManager();
 // استخدام كل من الروتر و metaManager
 app.use(router);
 app.use(metaManager); 
-
+app.use(pinia);
 // تثبيت التطبيق في العنصر #app
 app.mount('#app');

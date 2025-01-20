@@ -1,22 +1,45 @@
+/** ============================================
+table of contents
+================================================
+
+1. Display Products and Pagination
+2. Call Api using Apollo Client
+3.Scss Code
+
+
+*/
+
+/* *=======================================
+1. Display Products and Pagination
+*========================================== */
+
 <template>
     <div v-if="loading">
-
         <loading />
     </div>
     <div v-else-if="error">Error: {{ error.message }}</div>
     <div v-else class="flex flex-wrap justify-center">
         <div v-for="product in paginatedProducts" :key="product.id">
             <div
-                class="relative card m-10 flex w-full max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md">
+                class="relative card m-10 flex w-full  max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md">
                 <a class="relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl" href="#">
-                    <img loading="lazy" class="object-cover w-full"
-                        :src="product.images && product.images.length > 0 ? product.images[0] : imgDefault"
-                        :alt="product.title.split(' ').slice(0, 2).join('') || 'Default Image'"
-                        @error="handleImageError" />
+
+                    <div v-if="product.images?.[0]">
+                        <img loading="lazy" class="object-cover w-full" :src="product.images[0]"
+                            :alt="(product.title || '').split(' ').slice(0, 2).join(' ')" @error="handleImageError" />
+                    </div>
+                    <div v-else>
+                        <img loading="lazy" class="object-cover imgDefault w-full" :src="imgDefault"
+                            alt="Default Image" />
+                    </div>
+
+
                 </a>
+
                 <div class="mt-4 px-5 pb-5">
-                    <h5 class="text-xl tracking-tight text-slate-900">{{ product.title.split(' ').slice(0, 3).join(' ')
-                        }}</h5>
+                    <h5 class="text-xl tracking-tight text-slate-900">
+                        {{ (product.title || '').split(' ').slice(0, 3).join(' ') }}
+                    </h5>
                     <div class="mt-2 mb-5 flex items-center justify-between">
                         <p>
                             <span class="text-3xl font-bold text-slate-900">{{ product.price }}</span>
@@ -46,6 +69,13 @@
     </nav>
 </template>
 
+
+
+/* *=======================================
+2. Call Api using Apollo Client
+*========================================== */
+
+
 <script lang="ts">
 import { useQuery } from '@vue/apollo-composable';
 import gql from 'graphql-tag';
@@ -53,13 +83,11 @@ import { ref, computed, onMounted } from 'vue';
 import imgDefault from '../../assets/istockphoto-1409329028-612x612.jpg';
 import Loading from '../../components/Loading/Loading.vue';
 
-
 export default {
     components: {
         Loading
     },
     setup() {
-
         const GET_PRODUCTS = gql`
         query {
             products {
@@ -74,8 +102,7 @@ export default {
         const { result, error, loading } = useQuery(GET_PRODUCTS);
         const products = ref([]);
         const currentPage = ref(1);
-        const itemsPerPage = 8
-            ;
+        const itemsPerPage = 8;
 
         const totalPages = computed(() => Math.ceil(products.value.length / itemsPerPage));
 
@@ -87,23 +114,32 @@ export default {
 
         const handleImageError = (event: Event) => {
             const img = event.target as HTMLImageElement;
-            img.src = imgDefault;
+            if (img.src !== imgDefault) {
+                img.src = imgDefault;
+            }
         };
+
 
         const nextPage = () => {
             if (currentPage.value < totalPages.value) {
                 currentPage.value++;
+                localStorage.setItem('currentPage', currentPage.value.toString());
             }
         };
 
         const prevPage = () => {
             if (currentPage.value > 1) {
                 currentPage.value--;
+                localStorage.setItem('currentPage', currentPage.value.toString());
             }
         };
 
         onMounted(() => {
+            const cachedPage = localStorage.getItem('currentPage');
             const cachedProducts = localStorage.getItem('products');
+            if (cachedPage) {
+                currentPage.value = parseInt(cachedPage, 10);
+            }
             if (cachedProducts) {
                 products.value = JSON.parse(cachedProducts);
             } else if (result.value?.products) {
@@ -120,21 +156,33 @@ export default {
             currentPage,
             totalPages,
             imgDefault,
-            handleImageError,
             nextPage,
-            prevPage
+            prevPage,
+            handleImageError
         };
     },
 };
 </script>
 
+
+
+/* *=======================================
+3. Scss code
+*========================================== */
+
+
 <style scoped lang="scss">
 .card {
+    margin: 10px;
+
     img {
         transition: all 0.3s ease-in-out;
 
+
+
         &:hover {
             transform: scale(1.1);
+            filter: brightness(0.9);
         }
     }
 }

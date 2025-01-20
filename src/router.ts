@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import All from "./components/All/All.vue";
-import Mac from "./components/Mac/Mac.vue";
-import Iphone from "./components/Iphone/Iphone.vue";
-import Ipad from "./components/Ipad/Ipad.vue";
-import Ipod from "./components/Ipod/Ipod.vue";
-import Accessories from "./components/Accessories/Accessories.vue";
+import Clothes from "./components/Clothes/Clothes.vue";
+import Electronics from "./components/Electronics/Electronics.vue";
+import Change from "./components/ChangeTitle/Change.vue";
+import Shoes from "./components/Shoes/Shoes.vue";
+import Miscellaneous from "./components/Miscellaneous/Miscellaneous.vue";
 import NotFounded from "./components/NotFounded/NotFounded.vue";
 import Layout from "./components/Layout/Layout.vue";
 
@@ -21,29 +21,29 @@ const routes: RouteRecordRaw[] = [
          },
       },
       { 
-        path: '/mac', 
-        component: Mac,
-        meta: { title: 'Mac' },
+        path: '/clothes', 
+        component: Clothes,
+        meta: { title: 'Clothes' },
       },
       { 
-        path: '/iphone', 
-        component: Iphone,
-        meta: { title: 'iPhone' },
+        path: '/electronics', 
+        component: Electronics,
+        meta: { title: 'Electronics' },
       },
       { 
-        path: '/ipad', 
-        component: Ipad,
-        meta: { title: 'iPad' },
+        path: '/change', 
+        component: Change,
+        meta: { title: 'Change Title' },
       },
       { 
-        path: '/ipod', 
-        component: Ipod,
-        meta: { title: 'iPod' },
+        path: '/shoes', 
+        component: Shoes,
+        meta: { title: 'Shoes' },
       },
       { 
-        path: '/accessories', 
-        component: Accessories,
-        meta: { title: 'Accessories' },
+        path: '/miscellaneous', 
+        component: Miscellaneous,
+        meta: { title: 'Miscellaneous' },
       },
     ],
   },
