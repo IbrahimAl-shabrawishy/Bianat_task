@@ -1,18 +1,3 @@
-/** ============================================
-table of contents
-================================================
-
-1. Display Products and Pagination
-2. Call Api using Apollo Client
-3.Scss Code
-
-
-*/
-
-/* *=======================================
-1. Display Products and Pagination
-*========================================== */
-
 <template>
     <div v-if="loading">
         <loading />
@@ -21,20 +6,26 @@ table of contents
     <div v-else class="flex flex-wrap justify-center">
         <div v-for="product in paginatedProducts" :key="product.id">
             <div
-                class="relative card m-10 flex w-full  max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md">
-                <a class="relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl" href="#">
+                class="relative card m-10 flex w-full max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md">
 
-                    <div v-if="product.images?.[0]">
-                        <img loading="lazy" class="object-cover w-full" :src="product.images[0]"
-                            :alt="(product.title || '').split(' ').slice(0, 2).join(' ')" @error="handleImageError" />
+
+
+                <router-link :to="`/productDetails/${product.id}`">
+
+                    <div class="relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl" href="#">
+                        <div v-if="product.images?.[0]">
+                            <img loading="lazy" class="object-cover w-full" :src="product.images[0]"
+                                :alt="(product.title || '').split(' ').slice(0, 2).join(' ')"
+                                @error="handleImageError" />
+                        </div>
+                        <div v-else>
+                            <img loading="lazy" class="object-cover imgDefault w-full" :src="imgDefault"
+                                alt="Default Image" />
+                        </div>
                     </div>
-                    <div v-else>
-                        <img loading="lazy" class="object-cover imgDefault w-full" :src="imgDefault"
-                            alt="Default Image" />
-                    </div>
 
+                </router-link>
 
-                </a>
 
                 <div class="mt-4 px-5 pb-5">
                     <h5 class="text-xl tracking-tight text-slate-900">
@@ -69,19 +60,13 @@ table of contents
     </nav>
 </template>
 
-
-
-/* *=======================================
-2. Call Api using Apollo Client
-*========================================== */
-
-
 <script lang="ts">
 import { useQuery } from '@vue/apollo-composable';
 import gql from 'graphql-tag';
 import { ref, computed, onMounted } from 'vue';
 import imgDefault from '../../assets/istockphoto-1409329028-612x612.jpg';
 import Loading from '../../components/Loading/Loading.vue';
+
 
 export default {
     components: {
@@ -118,7 +103,6 @@ export default {
                 img.src = imgDefault;
             }
         };
-
 
         const nextPage = () => {
             if (currentPage.value < totalPages.value) {
@@ -164,21 +148,12 @@ export default {
 };
 </script>
 
-
-
-/* *=======================================
-3. Scss code
-*========================================== */
-
-
 <style scoped lang="scss">
 .card {
     margin: 10px;
 
     img {
         transition: all 0.3s ease-in-out;
-
-
 
         &:hover {
             transform: scale(1.1);

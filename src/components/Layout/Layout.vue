@@ -2,6 +2,8 @@
     <div>
         <Home />
         <Navbar />
+
+
         <main>
             <router-view />
         </main>
@@ -13,11 +15,13 @@
 import Navbar from "../../components/Navbar/Navbar.vue";
 import Home from "../../components/Home/Home.vue";
 
+
 export default {
     name: 'Layout',
     components: {
         Navbar,
-        Home
+        Home,
+
     }
 }
 </script>

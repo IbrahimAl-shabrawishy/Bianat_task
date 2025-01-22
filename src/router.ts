@@ -7,7 +7,8 @@ import Shoes from "./components/Shoes/Shoes.vue";
 import Miscellaneous from "./components/Miscellaneous/Miscellaneous.vue";
 import NotFounded from "./components/NotFounded/NotFounded.vue";
 import Layout from "./components/Layout/Layout.vue";
-
+import ProductDetails from "./components/ProductDetails/ProductDetails.vue";
+import Home from "./components/Home/Home.vue";
 const routes: RouteRecordRaw[] = [ 
   {
     path: '/',
@@ -45,8 +46,21 @@ const routes: RouteRecordRaw[] = [
         component: Miscellaneous,
         meta: { title: 'Miscellaneous' },
       },
+     
     ],
+    
+    
   },
+  {
+path:'/productDetails/:id',
+component:ProductDetails,
+meta:{title:'Product Details'}
+  },{
+  path:'/home',
+  component:Home,
+  meta:{title:'Home '}
+    },
+ 
   {
     path: "/:pathMatch(.*)*", 
     component: NotFounded,

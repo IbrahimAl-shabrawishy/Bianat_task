@@ -64,7 +64,7 @@ table of contents
                     <li><router-link to="/shoes"
                             class="md:p-4 py-3 px-0 block md:mb-0 mb-2 hover:underline decoration-blue-500 decoration-2 ">Shoes</router-link>
                     </li>
-                    <li><router-link to="miscellaneous"
+                    <li><router-link to="/miscellaneous"
                             class="md:p-4 py-3 px-0 block md:mb-0 mb-2 hover:underline decoration-blue-500 decoration-2 ">Miscellaneous</router-link>
                     </li>
                 </ul>
