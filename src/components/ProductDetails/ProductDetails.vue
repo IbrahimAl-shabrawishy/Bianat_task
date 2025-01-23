@@ -1,70 +1,65 @@
 <template>
-    <div v-if="loading">
-        <Loading />
-    </div>
-    <div v-else-if="error">
-        <h3>{{ error.message }}</h3>
-    </div>
-
-    <div v-if="product">
-        <h1>{{ product.title }}</h1>
-        <p>Price: {{ product.price }}</p>
-        <p>Description: {{ product.description }}</p>
-        <div v-if="product.images && product.images.length > 0">
-            <h3>Images</h3>
-            <div v-for="(image, index) in product.images" :key="index">
-                <img :src="image" alt="Product image" />
-            </div>
+    <div v-if="loading">جاري التحميل...</div>
+    <div v-else-if="error">حدث خطأ أثناء تحميل البيانات: {{ error.message }}</div>
+    <div v-else>
+        <!-- تحقق إذا كانت البيانات موجودة قبل العرض -->
+        <div v-if="product">
+            <h1>{{ product.title }}</h1>
+            <p>السعر: {{ product.price }}</p>
+        </div>
+        <div v-else>
+            <p>المنتج غير موجود.</p>
         </div>
     </div>
 </template>
 
 <script>
+import { useRoute } from 'vue-router';
 import { useQuery } from '@vue/apollo-composable';
 import gql from 'graphql-tag';
-import { ref, watchEffect } from 'vue';
-import Loading from '../../components/Loading/Loading.vue';
+import { ref, watch } from 'vue';
 
 export default {
-    props: ['id'],
-    components: {
-        Loading,
-    },
-    setup(props) {
+    setup() {
+        const route = useRoute();
+        const productId = route.params.id;  // الحصول على الـ id من الرابط
 
-        const GET_PRODUCTDETAILS = gql`
-            query($id: ID!) {
-                product(id: $id) {
-                    title
-                    price
-                    description
-                    images
-                }
-            }
-        `;
+        console.log('Product ID:', productId);  // التأكد من الـ ID المستخرج
 
-        const { result, loading, error } = useQuery(GET_PRODUCTDETAILS, {
-            variables: { id: props.id }
+        // استعلام GraphQL مع متغيرات
+        const GET_PRODUCT_DETAILS = gql`
+        query($id: ID!) {
+          product(id: $id) {
+            title
+            price
+            
+          }
+        }
+      `;
+
+        // استخدام المتغيرات في الاستعلام
+        const { result, error, loading } = useQuery(GET_PRODUCT_DETAILS, {
+            id: productId
         });
 
-        const product = ref();
+        const product = ref(null);
 
-        watchEffect(() => {
-            if (result.value) {
+        // تتبع الاستجابة وتحديث البيانات
+        watch(() => result.value, () => {
+            if (result.value && result.value.product) {
                 product.value = result.value.product;
+            } else {
+                console.log('No product data available');
             }
         });
 
         return {
             product,
             loading,
-            error,
-            result
-        }
+            error
+        };
     }
-}
+};
 </script>
 
-<style>
-/* يمكن إضافة تنسيقات هنا */
-</style>
+<style scoped></style>

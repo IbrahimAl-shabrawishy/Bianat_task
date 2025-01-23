@@ -52,10 +52,13 @@ const routes: RouteRecordRaw[] = [
     
   },
   {
-path:'/productDetails/:id',
-component:ProductDetails,
-meta:{title:'Product Details'}
-  },{
+    path: '/product/:id',
+    name: 'ProductDetails',  // إضافة اسم المسار هنا
+    component: ProductDetails,
+    props: true
+  }
+  
+,{
   path:'/home',
   component:Home,
   meta:{title:'Home '}
