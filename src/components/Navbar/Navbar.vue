@@ -23,7 +23,7 @@ table of contents
 
 
     </div>
-    <div class="text-center font-bold">
+    <div v-else class="text-center font-bold">
         <h1>BEST SELLER</h1>
     </div>
     <header class="lg:px-16 px-4 bg-white flex items-center justify-center py-4 shadow-md relative">

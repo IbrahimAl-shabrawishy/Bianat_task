@@ -1,4 +1,5 @@
 <template>
+
     <div v-if="loading">
 
         <Loading />
@@ -6,25 +7,29 @@
     <div v-else-if="error"> {{ error.message }}</div>
     <div v-else>
 
-        <div v-if="product">
+        <div v-if="productStore.product">
             <div class="bg-gray-100">
                 <div class="container mx-auto px-4 py-8">
                     <div class="flex flex-wrap -mx-4">
                         <!-- Product Images -->
                         <div class="w-full md:w-1/2 px-4 mb-8">
-                            <img loading="lazy" :src="product.images[0]" :alt="product.title"
+                            <img loading="lazy" :src="productStore.product.images[0]" :alt="productStore.product.title"
                                 class=" rounded-lg shadow-md mb-4" id="mainImage">
                             <div class="flex gap-4 py-4 justify-center overflow-x-auto">
-                                <img loading="lazy" :src="product.images[1]" :alt="product.title"
+                                <img loading="lazy" :src="productStore.product.images[1]"
+                                    :alt="productStore.product.title"
                                     class="size-16 sm:size-20 object-cover rounded-md cursor-pointer opacity-60 hover:opacity-100 transition duration-300"
                                     onclick="changeImage(this.src)">
-                                <img loading="lazy" :src="product.images[2]" :alt="product.title"
+                                <img loading="lazy" :src="productStore.product.images[2]"
+                                    :alt="productStore.product.title"
                                     class="size-16 sm:size-20 object-cover rounded-md cursor-pointer opacity-60 hover:opacity-100 transition duration-300"
                                     onclick="changeImage(this.src)">
-                                <img loading="lazy" :src="product.images[0]" :alt="product.title"
+                                <img loading="lazy" :src="productStore.product.images[0]"
+                                    :alt="productStore.product.title"
                                     class="size-16 sm:size-20 object-cover rounded-md cursor-pointer opacity-60 hover:opacity-100 transition duration-300"
                                     onclick="changeImage(this.src)">
-                                <img loading="lazy" :src="product.images[1]" :alt="product.title"
+                                <img loading="lazy" :src="productStore.product.images[1]"
+                                    :alt="productStore.product.title"
                                     class="size-16 sm:size-20 object-cover rounded-md cursor-pointer opacity-60 hover:opacity-100 transition duration-300"
                                     onclick="changeImage(this.src)">
                             </div>
@@ -32,9 +37,9 @@
 
                         <!-- Product Details -->
                         <div class="w-full md:w-1/2 px-4 py-11">
-                            <h2 class="text-3xl font-bold mb-2">{{ product.title }}</h2>
+                            <h2 class="text-3xl font-bold mb-2">{{ productStore.product.title }}</h2>
                             <div class="mb-4">
-                                <span class="text-2xl font-bold mr-2">{{ product.price }}</span>
+                                <span class="text-2xl font-bold mr-2">{{ productStore.product.price }}</span>
                                 <span class="text-gray-500 line-through">$100.99</span>
                             </div>
                             <div class="flex items-center mb-4">
@@ -70,7 +75,7 @@
                                 </svg>
                                 <span class="ml-2 text-gray-600">4.5 (120 reviews)</span>
                             </div>
-                            <p class="text-gray-700 mb-6">{{ product.description }}</p>
+                            <p class="text-gray-700 mb-6">{{ productStore.product.description }}</p>
 
 
 
@@ -117,67 +122,33 @@
 
 
 
-
-
-
-
         </div>
         <div v-else>
-            <p>المنتج غير موجود.</p>
+            <p>Product not found</p>
         </div>
     </div>
 </template>
 
 <script>
-import { useRoute } from 'vue-router';
-import { useQuery } from '@vue/apollo-composable';
-import gql from 'graphql-tag';
-import { ref, watch } from 'vue';
+
 import Loading from '../../components/Loading/Loading.vue';
+import { useProductStore } from '../../Stores/product';
 export default {
     components: {
-        Loading
+        Loading,
+
     },
     setup() {
-        const route = useRoute();
-        const productId = route.params.id;  // الحصول على الـ id من الرابط
+        const productStore = useProductStore();
 
-        console.log('Product ID:', productId);  // التأكد من الـ ID المستخرج
 
-        // استعلام GraphQL مع متغيرات
-        const GET_PRODUCT_DETAILS = gql`
-        query($id: ID!) {
-          product(id: $id) {
-            title
-            price
-            images
-            description
-            
-          }
-        }
-      `;
 
-        // استخدام المتغيرات في الاستعلام
-        const { result, error, loading } = useQuery(GET_PRODUCT_DETAILS, {
-            id: productId
-        });
 
-        const product = ref(null);
-
-        // تتبع الاستجابة وتحديث البيانات
-        watch(() => result.value, () => {
-            if (result.value && result.value.product) {
-                product.value = result.value.product;
-            } else {
-                console.log('No product data available');
-            }
-        });
 
         return {
-            product,
-            loading,
-            error
-        };
+            productStore,
+        }
+
     }
 };
 </script>

@@ -9,6 +9,8 @@ import NotFounded from "./components/NotFounded/NotFounded.vue";
 import Layout from "./components/Layout/Layout.vue";
 import ProductDetails from "./components/ProductDetails/ProductDetails.vue";
 import Home from "./components/Home/Home.vue";
+import Cart from "./components/Cart/Cart.vue";
+
 const routes: RouteRecordRaw[] = [ 
   {
     path: '/',
@@ -53,7 +55,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/product/:id',
-    name: 'ProductDetails',  // إضافة اسم المسار هنا
+    name: 'ProductDetails',  
     component: ProductDetails,
     props: true
   }
@@ -62,6 +64,11 @@ const routes: RouteRecordRaw[] = [
   path:'/home',
   component:Home,
   meta:{title:'Home '}
+    },
+    {
+       path:"/cart",
+       component:Cart,
+       meta:{title:"Cart"}
     },
  
   {
