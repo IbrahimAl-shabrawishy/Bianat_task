@@ -11,6 +11,7 @@ import ProductDetails from "./components/ProductDetails/ProductDetails.vue";
 import Home from "./components/Home/Home.vue";
 import Cart from "./components/Cart/Cart.vue";
 
+
 const routes: RouteRecordRaw[] = [ 
   {
     path: '/',
@@ -66,10 +67,10 @@ const routes: RouteRecordRaw[] = [
   meta:{title:'Home '}
     },
     {
-       path:"/cart",
-       component:Cart,
-       meta:{title:"Cart"}
-    },
+      path: '/cart',
+      component: Cart,
+      meta: { title: 'Cart' }
+    },  
  
   {
     path: "/:pathMatch(.*)*", 

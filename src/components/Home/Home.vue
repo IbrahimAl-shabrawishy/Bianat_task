@@ -34,15 +34,17 @@
                     </h5>
                     <div class="mt-2 mb-5 flex items-center justify-between">
                         <p>
-                            <span class="text-3xl font-bold text-slate-900">{{ product.price }}</span>
+                            <span class="text-3xl font-bold text-slate-900">{{ product?.price }}</span>
                             <span class="text-sm text-slate-900 line-through">$10</span>
                         </p>
                     </div>
                     <div class="btn flex justify-center">
-                        <button
+
+                        <button @click="productStore.addToCart()"
                             class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                             Add to cart
                         </button>
+
                     </div>
                 </div>
             </div>
@@ -67,6 +69,7 @@ import gql from 'graphql-tag';
 import { ref, computed, onMounted } from 'vue';
 import imgDefault from '../../assets/istockphoto-1409329028-612x612.jpg';
 import Loading from '../../components/Loading/Loading.vue';
+import { useProductStore } from '../../Stores/product';
 
 
 export default {
@@ -84,7 +87,7 @@ export default {
             }
         }
         `;
-
+        const productStore = useProductStore();
         const { result, error, loading } = useQuery(GET_PRODUCTS);
         const products = ref([]);
         const currentPage = ref(1);
@@ -112,12 +115,16 @@ export default {
             }
         };
 
+
+
         const prevPage = () => {
             if (currentPage.value > 1) {
                 currentPage.value--;
                 localStorage.setItem('currentPage', currentPage.value.toString());
             }
         };
+
+
 
         onMounted(() => {
             const cachedPage = localStorage.getItem('currentPage');
@@ -143,7 +150,11 @@ export default {
             imgDefault,
             nextPage,
             prevPage,
-            handleImageError
+            handleImageError,
+            productStore
+
+
+
         };
     },
 };
