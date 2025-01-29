@@ -39,7 +39,6 @@ export default {
         Loading,
     },
     setup() {
-        // استعلام GraphQL لجلب فئة واحدة
         const GET_CATEGORY = gql`
             query {
                 category(id: 3) {
@@ -50,13 +49,13 @@ export default {
             }
         `;
 
-        // استعلام GraphQL
+
         const { result, loading, error } = useQuery(GET_CATEGORY);
 
-        // بيانات الفئة
+
         const category = ref([]);
 
-        // وظيفة لمعالجة خطأ الصور
+
         const handleImageError = (event: Event) => {
             const img = event.target as HTMLImageElement;
             if (img.src !== imgDefault) {
@@ -64,10 +63,10 @@ export default {
             }
         };
 
-        // مراقبة التغيرات في نتيجة الاستعلام
+
         watchEffect(() => {
             if (result.value && result.value.category) {
-                category.value = result.value.category; // تحديث بيانات الفئة
+                category.value = result.value.category;
             }
         });
 
@@ -82,16 +81,21 @@ export default {
 };
 </script>
 
+
+
 <style lang="scss" scoped>
+@use "../../Variables.scss" as *;
+
+
 .card {
-    margin: 10px;
+    margin: $margin;
 
     img {
-        transition: all 0.3s ease-in-out;
+        transition: $transition;
 
         &:hover {
-            transform: scale(1.1);
-            filter: brightness(0.9);
+            transform: $transform;
+            filter: $filter;
         }
     }
 }

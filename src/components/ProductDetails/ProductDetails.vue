@@ -77,10 +77,6 @@
                             </div>
                             <p class="text-gray-700 mb-6">{{ productStore.product.description }}</p>
 
-
-
-
-
                             <div class="flex space-x-4 mb-6">
                                 <button @click="productStore.addToCart()"
                                     class="bg-indigo-600 flex gap-2 items-center text-white px-6 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
@@ -108,13 +104,8 @@
             </div>
 
 
-
-
-
         </div>
-        <div v-else>
-            <p>Product not found</p>
-        </div>
+
     </div>
 </template>
 
@@ -132,18 +123,8 @@ export default {
         const productStore = useProductStore();
 
 
-
-
-
-
-
-
-
         return {
             productStore,
-
-
-
         }
 
     }

@@ -7,7 +7,7 @@
         <main>
             <router-view />
         </main>
-        footer
+
     </div>
 </template>
 

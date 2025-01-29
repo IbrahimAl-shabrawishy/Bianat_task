@@ -7,9 +7,9 @@ import { ref, watch, onMounted, watchEffect } from 'vue';
 export const useProductStore = defineStore('product', () => {
   const route = useRoute();
   const router = useRouter();
-  const productId = ref(route.params.id); // المعرف من الرابط
+  const productId = ref(route.params.id); 
 
-  // استعلام GraphQL لجلب تفاصيل المنتج
+ 
   const GET_PRODUCT_DETAILS = gql`
     query($id: ID!) {
       product(id: $id) {
@@ -17,6 +17,8 @@ export const useProductStore = defineStore('product', () => {
         price
         images
         description
+        
+        
       }
     }
   `;
@@ -30,22 +32,21 @@ export const useProductStore = defineStore('product', () => {
 
   const product = ref(null);
 
-  // مراقبة تغيير المعرف في الرابط
   watch(
-    () => route.params.id, // المراقبة للـ id
+    () => route.params.id, 
     (newId) => {
-      // عند التغيير في الـ id
-      productId.value = newId; // تحديث الـ productId
+      
+      productId.value = newId;
       console.log('Product ID updated:', newId);
-      // إعادة تنفيذ الاستعلام مع الـ id الجديد
+      
       refetch({
         id: newId,
-        skip: !newId, // إذا كان المعرف فارغًا، يتم تخطي الاستعلام
+        skip: !newId, 
       });
     }
   );
 
-  // مراقبة نتائج الاستعلام وتحديث المنتج
+  
   watchEffect(() => {
     if (result.value) {
       console.log('Query result:', result.value);
@@ -62,17 +63,16 @@ export const useProductStore = defineStore('product', () => {
 
   const cart = ref([]);
 
-  // عند تحميل الصفحة لأول مرة
+  
   onMounted(() => {
     const routeId = route.params.id;
     if (routeId) {
-      productId.value = routeId; // تعيين قيمة المعرف إذا كان موجودًا
+      productId.value = routeId; 
       console.log('Product ID on mounted:', productId.value);
     } else {
       console.log('No product ID found in the route');
     }
 
-    // استرجاع السلة من localStorage عند تحميل الصفحة
     const storedCart = localStorage.getItem('cart');
     if (storedCart) {
       cart.value = JSON.parse(storedCart);
@@ -83,22 +83,42 @@ export const useProductStore = defineStore('product', () => {
   });
 
   function addToCart() {
-    // إضافة المنتج إلى السلة
+    
     cart.value.push(product?.value);
     console.log('Product added to cart:', product?.value);
 
-    // تخزين السلة في localStorage
+    
     localStorage.setItem('cart', JSON.stringify(cart.value));
     console.log('Cart saved to localStorage');
 
     router.push('/cart');
   }
 
-  // دالة للعودة إلى الصفحة الرئيسية
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
   function mainPage() {
     const main = '/';
 
-    // التأكد من وجود معرّف صالح للمنتج قبل إعادة التوجيه
+    
     if (productId.value) {
       router.push(main);
     } else {

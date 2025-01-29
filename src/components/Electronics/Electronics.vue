@@ -82,16 +82,20 @@ export default {
 };
 </script>
 
+
 <style lang="scss" scoped>
+@use "../../Variables.scss" as *;
+
+
 .card {
-    margin: 10px;
+    margin: $margin;
 
     img {
-        transition: all 0.3s ease-in-out;
+        transition: $transition;
 
         &:hover {
-            transform: scale(1.1);
-            filter: brightness(0.9);
+            transform: $transform;
+            filter: $filter;
         }
     }
 }

@@ -1,9 +1,27 @@
+/** ============================================
+table of contents
+================================================
+
+1. Display All Products and Pagination
+2. Call Api using Apollo Client
+3.Scss Code
+
+
+*
+
+
+
+/* *=======================================
+1. Display All Products and Pagination
+*========================================== */
+
 <template>
     <div v-if="loading">
         <loading />
     </div>
     <div v-else-if="error">Error: {{ error.message }}</div>
     <div v-else class="flex flex-wrap justify-center">
+
         <div v-for="product in paginatedProducts" :key="product.id">
             <div
                 class="relative card m-10 flex w-full max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md">
@@ -40,7 +58,7 @@
                     </div>
                     <div class="btn flex justify-center">
 
-                        <button @click="productStore.addToCart()"
+                        <button
                             class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                             Add to cart
                         </button>
@@ -63,18 +81,25 @@
     </nav>
 </template>
 
+
+
+
+/* *=======================================
+2. Call Api using Apollo Client
+*========================================== */
 <script lang="ts">
 import { useQuery } from '@vue/apollo-composable';
 import gql from 'graphql-tag';
 import { ref, computed, onMounted } from 'vue';
 import imgDefault from '../../assets/istockphoto-1409329028-612x612.jpg';
 import Loading from '../../components/Loading/Loading.vue';
-import { useProductStore } from '../../Stores/product';
+
 
 
 export default {
     components: {
-        Loading
+        Loading,
+
     },
     setup() {
         const GET_PRODUCTS = gql`
@@ -87,7 +112,7 @@ export default {
             }
         }
         `;
-        const productStore = useProductStore();
+
         const { result, error, loading } = useQuery(GET_PRODUCTS);
         const products = ref([]);
         const currentPage = ref(1);
@@ -151,7 +176,7 @@ export default {
             nextPage,
             prevPage,
             handleImageError,
-            productStore
+
 
 
 
@@ -160,16 +185,23 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+/* *=======================================
+3. Scss Code
+*========================================== */
+
+<style lang="scss" scoped>
+@use "../../Variables.scss" as *;
+
+
 .card {
-    margin: 10px;
+    margin: $margin;
 
     img {
-        transition: all 0.3s ease-in-out;
+        transition: $transition;
 
         &:hover {
-            transform: scale(1.1);
-            filter: brightness(0.9);
+            transform: $transform;
+            filter: $filter;
         }
     }
 }
