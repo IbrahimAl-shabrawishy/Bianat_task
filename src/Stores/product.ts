@@ -49,16 +49,12 @@ export const useProductStore = defineStore('product', () => {
   
   watchEffect(() => {
     if (result.value) {
-      console.log('Query result:', result.value);
+      
       if (result.value.product) {
         product.value = result.value.product;
-        console.log('Product data:', product.value);
-      } else {
-        console.log('No product data available');
-      }
-    } else {
-      console.log('Result is empty or loading...');
-    }
+        
+      } 
+    } 
   });
 
   const cart = ref([]);
@@ -68,28 +64,24 @@ export const useProductStore = defineStore('product', () => {
     const routeId = route.params.id;
     if (routeId) {
       productId.value = routeId; 
-      console.log('Product ID on mounted:', productId.value);
-    } else {
-      console.log('No product ID found in the route');
-    }
+      
+    } 
 
     const storedCart = localStorage.getItem('cart');
     if (storedCart) {
       cart.value = JSON.parse(storedCart);
-      console.log('Loaded cart from localStorage:', cart.value);
-    } else {
-      console.log('No cart found in localStorage');
-    }
+      
+    } 
   });
 
   function addToCart() {
     
     cart.value.push(product?.value);
-    console.log('Product added to cart:', product?.value);
+    
 
     
-    localStorage.setItem('cart', JSON.stringify(cart.value));
-    console.log('Cart saved to localStorage');
+     localStorage.setItem('cart', JSON.stringify(cart.value));
+    
 
     router.push('/cart');
   }

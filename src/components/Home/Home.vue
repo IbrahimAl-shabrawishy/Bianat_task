@@ -90,7 +90,7 @@ table of contents
 <script lang="ts">
 import { useQuery } from '@vue/apollo-composable';
 import gql from 'graphql-tag';
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watchEffect } from 'vue';
 import imgDefault from '../../assets/istockphoto-1409329028-612x612.jpg';
 import Loading from '../../components/Loading/Loading.vue';
 
@@ -149,7 +149,12 @@ export default {
             }
         };
 
-
+        watchEffect(() => {
+            if (result.value?.products) {
+                products.value = result.value.products;
+                localStorage.setItem('products', JSON.stringify(products.value));
+            }
+        });
 
         onMounted(() => {
             const cachedPage = localStorage.getItem('currentPage');

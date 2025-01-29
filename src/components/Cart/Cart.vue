@@ -12,7 +12,6 @@
     <div v-if="productStore.cart.length > 0">
         <div class="bg-gray-100 h-screen py-8">
             <div class="container mx-auto px-4">
-
                 <div class="flex flex-col gap-4">
                     <div v-for="(item, index) in productStore.cart" :key="index"
                         class="bg-white rounded-lg shadow-md p-6 mb-4">
@@ -66,22 +65,32 @@ export default {
         const productStore = useProductStore();
 
         function updateLocalStorage() {
-            localStorage.setItem("cart", JSON.stringify(productStore.cart));
+            try {
+                localStorage.setItem("cart", JSON.stringify(productStore.cart));
+            } catch (error) {
+                console.error("Error updating localStorage", error);
+            }
+        }
+        function increaseQuantity(item) {
+            const index = productStore.cart.findIndex(cartItem => cartItem === item);
+
+            if (index !== -1) {
+
+                productStore.cart[index] = { ...productStore.cart[index], quantity: (productStore.cart[index].quantity || 0) + 1 };
+
+
+                productStore.cart = [...productStore.cart];
+
+                updateLocalStorage();
+            }
         }
 
-        function increaseQuantity(item) {
-            if (!item.quantity) {
-                item.quantity = 1;
-            }
-            item.quantity += 1;
-            updateLocalStorage();
-        }
+
 
         function decreaseQuantity(item) {
             if (item.quantity > 1) {
                 item.quantity -= 1;
             } else {
-                // حذف المنتج إذا وصلت الكمية إلى 0
                 productStore.cart = productStore.cart.filter(cartItem => cartItem !== item);
             }
             updateLocalStorage();
@@ -90,12 +99,12 @@ export default {
         return {
             productStore,
             increaseQuantity,
-            decreaseQuantity
+            decreaseQuantity,
+            updateLocalStorage,
+
         };
     }
 };
 </script>
 
-<style scoped>
-/* يمكنك إضافة تنسيقات CSS هنا */
-</style>
+<style scoped></style>
