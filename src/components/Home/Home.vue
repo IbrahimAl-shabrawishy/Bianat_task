@@ -22,6 +22,10 @@ table of contents
     <div v-else>
         <div>
             <Slider />
+
+        </div>
+        <div>
+            <ImagesStatick />
         </div>
         <div class=" py-5 px-5">
             <router-link to="/cart">
@@ -102,11 +106,13 @@ import imgDefault from '../../assets/istockphoto-1409329028-612x612.jpg';
 import Loading from '../../components/Loading/Loading.vue';
 import { useProductStore } from '../../Stores/product';
 import Slider from '../../components/Slider/Slider.vue';
+import ImagesStatick from '../Slider/ImagesStatick.vue';
 
 export default {
     components: {
         Loading,
-        Slider
+        Slider,
+        ImagesStatick
 
     },
     setup() {
@@ -188,7 +194,8 @@ export default {
             prevPage,
             handleImageError,
             productStore,
-            Slider
+            Slider,
+            ImagesStatick
 
 
 
