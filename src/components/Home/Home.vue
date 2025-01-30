@@ -20,7 +20,10 @@ table of contents
     <div v-else-if="error">Error: {{ error.message }}</div>
 
     <div v-else>
-        <div class="py-5 px-5">
+        <div>
+            <Slider />
+        </div>
+        <div class=" py-5 px-5">
             <router-link to="/cart">
                 <button class="bg-blue-700 text-white px-5 py-2 rounded-lg hover:bg-blue-800 transition">
                     🛒 Cart ({{ productStore.cart.length }})
@@ -98,11 +101,12 @@ import { ref, computed, onMounted, watchEffect } from 'vue';
 import imgDefault from '../../assets/istockphoto-1409329028-612x612.jpg';
 import Loading from '../../components/Loading/Loading.vue';
 import { useProductStore } from '../../Stores/product';
-
+import Slider from '../../components/Slider/Slider.vue';
 
 export default {
     components: {
         Loading,
+        Slider
 
     },
     setup() {
@@ -183,7 +187,8 @@ export default {
             nextPage,
             prevPage,
             handleImageError,
-            productStore
+            productStore,
+            Slider
 
 
 
