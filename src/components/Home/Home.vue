@@ -9,8 +9,6 @@ table of contents
 
 *
 
-
-
 /* *=======================================
 1. Display All Products and Pagination
 *========================================== */
@@ -20,49 +18,55 @@ table of contents
         <loading />
     </div>
     <div v-else-if="error">Error: {{ error.message }}</div>
-    <div v-else class="flex flex-wrap justify-center">
 
-        <div v-for="product in paginatedProducts" :key="product.id">
-            <div
-                class="relative card m-10 flex w-full max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md">
+    <div v-else>
+        <div class="py-5 px-5">
+            <router-link to="/cart">
+                <button class="bg-blue-700 text-white px-5 py-2 rounded-lg hover:bg-blue-800 transition">
+                    🛒 Cart ({{ productStore.cart.length }})
+                </button>
+            </router-link>
+        </div>
+        <div class="flex flex-wrap justify-center ">
 
 
-                <router-link :to="{ name: 'ProductDetails', params: { id: product.id } }">
+            <div v-for="product in paginatedProducts" :key="product.id">
+                <div
+                    class="relative card m-10 flex w-full max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md">
 
-                    <div class="relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl" href="#">
-                        <div v-if="product.images?.[0]">
-                            <img loading="lazy" class="object-cover w-full" :src="product.images[0]"
-                                :alt="(product.title || '').split(' ').slice(0, 2).join(' ')"
-                                @error="handleImageError" />
+
+                    <router-link :to="{ name: 'ProductDetails', params: { id: product.id } }">
+
+                        <div class="relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl" href="#">
+                            <div v-if="product.images?.[0]">
+                                <img loading="lazy" class="object-cover w-full" :src="product.images[0]"
+                                    :alt="(product.title || '').split(' ').slice(0, 2).join(' ')"
+                                    @error="handleImageError" />
+                            </div>
+                            <div v-else>
+                                <img loading="lazy" class="object-cover imgDefault w-full" :src="imgDefault"
+                                    alt="Default Image" />
+                            </div>
                         </div>
-                        <div v-else>
-                            <img loading="lazy" class="object-cover imgDefault w-full" :src="imgDefault"
-                                alt="Default Image" />
+
+                    </router-link>
+
+
+                    <div class="mt-4 px-5 pb-5">
+                        <h5 class="text-xl tracking-tight text-slate-900">
+                            {{ (product.title || '').split(' ').slice(0, 3).join(' ') }}
+                        </h5>
+                        <div class="mt-2 mb-5 flex items-center justify-between">
+                            <p>
+                                <span class="text-3xl font-bold text-slate-900">{{ product?.price }}</span>
+                                <span class="text-sm text-slate-900 line-through">$10</span>
+                            </p>
                         </div>
-                    </div>
-
-                </router-link>
+                        <div class="btn flex justify-center">
 
 
 
-
-                <div class="mt-4 px-5 pb-5">
-                    <h5 class="text-xl tracking-tight text-slate-900">
-                        {{ (product.title || '').split(' ').slice(0, 3).join(' ') }}
-                    </h5>
-                    <div class="mt-2 mb-5 flex items-center justify-between">
-                        <p>
-                            <span class="text-3xl font-bold text-slate-900">{{ product?.price }}</span>
-                            <span class="text-sm text-slate-900 line-through">$10</span>
-                        </p>
-                    </div>
-                    <div class="btn flex justify-center">
-
-                        <button
-                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                            Add to cart
-                        </button>
-
+                        </div>
                     </div>
                 </div>
             </div>
@@ -93,7 +97,7 @@ import gql from 'graphql-tag';
 import { ref, computed, onMounted, watchEffect } from 'vue';
 import imgDefault from '../../assets/istockphoto-1409329028-612x612.jpg';
 import Loading from '../../components/Loading/Loading.vue';
-
+import { useProductStore } from '../../Stores/product';
 
 
 export default {
@@ -112,7 +116,7 @@ export default {
             }
         }
         `;
-
+        const productStore = useProductStore();
         const { result, error, loading } = useQuery(GET_PRODUCTS);
         const products = ref([]);
         const currentPage = ref(1);
@@ -139,8 +143,6 @@ export default {
                 localStorage.setItem('currentPage', currentPage.value.toString());
             }
         };
-
-
 
         const prevPage = () => {
             if (currentPage.value > 1) {
@@ -181,6 +183,8 @@ export default {
             nextPage,
             prevPage,
             handleImageError,
+            productStore
+
 
 
 

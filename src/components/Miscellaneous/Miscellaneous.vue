@@ -1,3 +1,19 @@
+/** ============================================
+table of contents
+================================================
+
+1. Display Single Product from Category Api
+2. Apollo Client to Display Category
+3.Scss Code
+
+
+*
+
+/* *=======================================
+1. Display Single Product from Category Api
+*========================================== */
+
+
 <template>
     <div v-if="loading">
         <loading />
@@ -26,7 +42,9 @@
         </div>
     </div>
 </template>
-
+/* *=======================================
+2. Apollo Client to Display Category
+*========================================== */
 <script lang="ts">
 import { useQuery } from '@vue/apollo-composable';
 import gql from 'graphql-tag';
@@ -39,7 +57,7 @@ export default {
         Loading,
     },
     setup() {
-        // استعلام GraphQL لجلب فئة واحدة
+
         const GET_CATEGORY = gql`
             query {
                 category(id: 5) {
@@ -50,13 +68,13 @@ export default {
             }
         `;
 
-        // استعلام GraphQL
+
         const { result, loading, error } = useQuery(GET_CATEGORY);
 
-        // بيانات الفئة
+
         const category = ref([]);
 
-        // وظيفة لمعالجة خطأ الصور
+
         const handleImageError = (event: Event) => {
             const img = event.target as HTMLImageElement;
             if (img.src !== imgDefault) {
@@ -64,10 +82,9 @@ export default {
             }
         };
 
-        // مراقبة التغيرات في نتيجة الاستعلام
         watchEffect(() => {
             if (result.value && result.value.category) {
-                category.value = result.value.category; // تحديث بيانات الفئة
+                category.value = result.value.category;
             }
         });
 
@@ -82,7 +99,9 @@ export default {
 };
 </script>
 
-
+/* *=======================================
+3.Scss Code
+*========================================== */
 
 <style lang="scss" scoped>
 @use "../../Variables.scss" as *;

@@ -1,3 +1,23 @@
+/** ========================================================
+table of contents
+============================================================
+
+1. Display Cart Products from Pinia Store
+2. ProductStore from Pinia and functions to interact with it
+3.Scss Code
+
+
+*
+
+/* *======================================
+1. Display Cart Products from Pinia Store
+*========================================= */
+
+
+
+
+
+
 <template>
     <div v-if="loading">
         <Loading />
@@ -53,6 +73,10 @@
     </div>
 </template>
 
+/* *========================================================
+2. ProductStore from Pinia and functions to interact with it
+*=========================================================== */
+
 <script>
 import { useProductStore } from '../../Stores/product';
 import Loading from '../../components/Loading/Loading.vue';
@@ -106,5 +130,8 @@ export default {
     }
 };
 </script>
+/* *======================================
+3.Scss Code
+*========================================= */
 
 <style scoped></style>

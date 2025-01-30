@@ -1,3 +1,20 @@
+/** ============================================
+table of contents
+================================================
+
+1. Display Single Product from Category Api
+2. Apollo Client to Display Category
+3.Scss Code
+
+
+*
+
+/* *=======================================
+1. Display Single Product from Category Api
+*========================================== */
+
+
+
 <template>
     <div v-if="loading">
         <loading />
@@ -26,6 +43,10 @@
         </div>
     </div>
 </template>
+
+/* *=======================================
+2. Apollo Client to Display Category
+*========================================== */
 
 <script lang="ts">
 import { useQuery } from '@vue/apollo-composable';
@@ -81,7 +102,9 @@ export default {
 };
 </script>
 
-
+/* *=======================================
+3.Scss Code
+*========================================== */
 
 <style lang="scss" scoped>
 @use "../../Variables.scss" as *;

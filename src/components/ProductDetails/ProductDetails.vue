@@ -1,3 +1,19 @@
+/** ============================================
+table of contents
+================================================
+
+1. Display Single Product from Pinia
+2. ProductStore from Pinia
+3.Scss Code
+
+
+*
+
+/* *=======================================
+1. Display Single Product from Pinia
+*========================================== */
+
+
 <template>
 
     <div v-if="loading">
@@ -109,9 +125,16 @@
     </div>
 </template>
 
+
+
+
+
+/* *=======================================
+2. ProductStore from Pinia
+*========================================== */
+
+
 <script>
-
-
 import Loading from '../../components/Loading/Loading.vue';
 import { useProductStore } from '../../Stores/product';
 export default {
@@ -131,6 +154,9 @@ export default {
 };
 </script>
 
+/* *=======================================
+3.Scss Code
+*========================================== */
 <style lang="scss" scoped>
 #mainImage {
     width: 100%;
