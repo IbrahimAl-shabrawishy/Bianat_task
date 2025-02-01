@@ -90,7 +90,7 @@ export default {
         const { result, error, loading } = useQuery(GET_CATEGORIES);
         const categories = ref([]);
 
-        // Handle image error (fallback to default image)
+
         const handleImageError = (event: Event) => {
             const img = event.target as HTMLImageElement;
             if (img.src !== imgDefault) {
@@ -99,7 +99,7 @@ export default {
             }
         };
 
-        // Watch the result and update categories
+
         watchEffect(() => {
             if (result.value) {
                 categories.value = result.value.categories || [];
