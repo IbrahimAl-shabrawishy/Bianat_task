@@ -1,12 +1,14 @@
-import { ApolloClient, InMemoryCache } from '@apollo/client';
 
-// رابط API الخاص بـ GraphQL
-const httpLink = 'https://api.escuelajs.co/graphql';
+import { ApolloClient, InMemoryCache, createHttpLink } from "@apollo/client/core";
 
-// إعداد Apollo Client
-export const apolloClient = new ApolloClient({
-  uri: httpLink, // الرابط
-  cache: new InMemoryCache(), // تخزين البيانات مؤقتًا
+const httpLink = createHttpLink({
+  uri: "https://api.escuelajs.co/graphql", 
+});
+
+const apolloClient = new ApolloClient({
+  link: httpLink,
+  cache: new InMemoryCache(),
 });
 
 export default apolloClient;
+

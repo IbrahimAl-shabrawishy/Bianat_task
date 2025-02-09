@@ -1,5 +1,5 @@
 import { createApp, h } from 'vue';
-import { provideApolloClient } from '@vue/apollo-composable';  
+import { provideApolloClient } from "@vue/apollo-composable"; 
 import apolloClient from './apollo-client'; 
 import { createMetaManager } from 'vue-meta';
 import './style.css';
@@ -29,5 +29,9 @@ app.use(pinia);
 
 app.mount('#app');
   
+
+
+
+
 
 

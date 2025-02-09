@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { useRoute, useRouter } from 'vue-router';
 import { useQuery } from '@vue/apollo-composable';
-import gql from 'graphql-tag';
+import { gql } from "@apollo/client/core";
 import { ref, watch, onMounted, watchEffect } from 'vue';
 
 export const useProductStore = defineStore('product', () => {

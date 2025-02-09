@@ -47,7 +47,7 @@ table of contents
 *========================================== */
 <script lang="ts">
 import { useQuery } from '@vue/apollo-composable';
-import gql from 'graphql-tag';
+import { gql } from "@apollo/client/core";
 import { ref, watchEffect } from 'vue';
 import imgDefault from '../../assets/istockphoto-1409329028-612x612.jpg';
 import Loading from '../../components/Loading/Loading.vue';
