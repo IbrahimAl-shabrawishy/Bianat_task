@@ -20,7 +20,7 @@
         <div class="flex flex-wrap justify-center">
             <div v-for="product in paginatedProducts" :key="product.id">
                 <div
-                    class="relative card m-10 flex w-full max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md">
+                    class="relative  max-h-[400px] card m-10 flex w-full max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md">
                     <router-link :to="{ name: 'ProductDetails', params: { id: product.id } }">
                         <div class="relative  mx-3 mt-3 flex h-60 overflow-hidden rounded-xl">
                             <div v-if="product.images?.[0]">
