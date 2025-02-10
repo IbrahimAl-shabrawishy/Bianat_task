@@ -24,7 +24,7 @@ table of contents
             <h1>BEST SELLER</h1>
 
         </div>
-        <header class="lg:px-16 px-4 bg-white flex items-center justify-center py-4 shadow-md relative">
+        <header class="lg:px-16 px-4 bg-white flex items-center justify-center py-4  relative">
 
             <label for="menu-toggle" class="pointer-cursor md:hidden block absolute left-4">
                 <svg class="fill-current text-gray-900" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
@@ -77,11 +77,6 @@ table of contents
 /* *=======================================
 2. javaScript code using vue js
 *========================================== */
-
-
-
-
-
 <script>
 import { ref } from 'vue';
 export default {

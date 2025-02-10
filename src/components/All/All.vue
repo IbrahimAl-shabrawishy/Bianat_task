@@ -2,9 +2,11 @@
     <div v-if="loading">
         <Loading />
     </div>
-    <div v-else-if="error">Error: {{ error.message }}</div>
-    <div v-else class="flex flex-wrap justify-center">
-        <div v-for="category in result?.categories || []" :key="category.id">
+    <div v-else-if="error">
+        {{ error.message }}
+    </div>
+    <div v-else class="flex flex-wrap  justify-center">
+        <div v-for="category in result.categories" :key="category.id">
             <div
                 class="relative card m-10 flex w-full max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md">
                 <a class="relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl" href="#">
@@ -18,21 +20,21 @@
                     </div>
                 </a>
                 <div class="mt-4 px-5 pb-5">
-                    <h5 class="text-xl tracking-tight text-slate-900">
+                    <h5 class="text-xl tracking-tight text-center text-slate-900">
                         {{ (category.name || '').split(' ').slice(0, 3).join(' ') }}
                     </h5>
                 </div>
             </div>
+
         </div>
+
     </div>
 </template>
-
 <script lang="ts">
 import { useQuery } from '@vue/apollo-composable';
 import { gql } from "@apollo/client/core";
 import imgDefault from '../../assets/istockphoto-1409329028-612x612.jpg';
 import Loading from '../../components/Loading/Loading.vue';
-
 export default {
     components: {
         Loading,
