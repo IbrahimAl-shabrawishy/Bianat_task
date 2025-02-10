@@ -91,7 +91,7 @@ table of contents
                                 </svg>
                                 <span class="ml-2 text-gray-600">4.5 (120 reviews)</span>
                             </div>
-                            <p class="text-gray-700 mb-6">{{ productStore.product.description }}</p>
+                            <p class="text-gray-400 mb-6">{{ productStore.product.description }}</p>
 
                             <div class="flex space-x-4 mb-6">
                                 <button @click="productStore.addToCart()"

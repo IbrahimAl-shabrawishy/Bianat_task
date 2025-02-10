@@ -22,7 +22,7 @@
                 <div
                     class="relative  max-h-[400px] card m-10 flex w-full max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md">
                     <router-link :to="{ name: 'ProductDetails', params: { id: product.id } }">
-                        <div class="relative  mx-3 mt-3 flex h-60 overflow-hidden rounded-xl">
+                        <div class="relative    mx-3 mt-3 flex h-60 overflow-hidden rounded-xl">
                             <div v-if="product.images?.[0]">
                                 <img loading="lazy" class="object-cover w-full" :src="product.images[0]"
                                     :alt="(product.title || '').split(' ').slice(0, 2).join(' ')"
@@ -174,6 +174,13 @@ export default {
 
 .card {
     margin: $margin;
+    transition: $transition;
+
+
+    &:hover {
+        border: black 1px solid;
+
+    }
 
     img {
         transition: $transition;
@@ -182,6 +189,8 @@ export default {
             transform: $transform;
             filter: $filter;
         }
+
     }
+
 }
 </style>

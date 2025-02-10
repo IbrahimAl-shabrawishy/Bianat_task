@@ -106,12 +106,19 @@ export default {
 3.Scss Code
 *========================================== */
 
+
 <style lang="scss" scoped>
 @use "../../Variables.scss" as *;
 
-
 .card {
     margin: $margin;
+    transition: $transition;
+
+
+    &:hover {
+        border: black 1px solid;
+
+    }
 
     img {
         transition: $transition;
@@ -120,6 +127,8 @@ export default {
             transform: $transform;
             filter: $filter;
         }
+
     }
+
 }
 </style>
