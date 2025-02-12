@@ -17,7 +17,6 @@ table of contents
 <template>
 
     <div v-if="loading">
-
         <Loading />
     </div>
     <div v-else-if="error"> {{ error.message }}</div>
@@ -38,7 +37,6 @@ table of contents
                                     @click="changeImage(image)" @error="handleImage">
                             </div>
                         </div>
-
                         <!-- Product Details -->
                         <div class="w-full md:w-1/2 px-4 py-11">
                             <h2 class="text-3xl font-bold mb-2">{{ productStore.product.title }}</h2>
