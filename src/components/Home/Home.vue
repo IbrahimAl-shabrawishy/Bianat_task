@@ -1,118 +1,133 @@
+/** ============================================
+table of contents
+================================================
+
+1. Display Products
+2. Apollo Client to Display Products
+3.Scss Code
+
+
+*
+
+/* *=======================================
+1. Display Products
+*========================================== */
+
+
+
+
+
 <template>
     <div v-if="loading">
-        <loading />
+        <Loading />
     </div>
-    <div v-else-if="error">Error: {{ error.message }}</div>
+    <div v-else-if="error">
+        Error: {{ error.message }}
+    </div>
     <div v-else>
-        <div>
-            <Slider />
-        </div>
-        <div>
-            <ImagesStatic />
-        </div>
+        <Slider />
+        <ImagesStatic />
         <div class="py-5 px-5">
             <router-link to="/cart">
-                <button class="bg-blue-700 text-white px-5 py-2 rounded-lg hover:bg-blue-800 transition">
-                    🛒 Cart ({{ productStore.cart.length }})
+                <button class="bg-gray-700 text-white px-5 py-2 rounded-lg hover:bg-gray-800 transition">
+                    🛒 Cart {{ cartStore.cart.length }}
                 </button>
             </router-link>
         </div>
-        <div class="flex flex-wrap justify-center">
+
+        <div v-if="paginatedProducts.length" class="flex flex-wrap justify-center">
             <div v-for="product in paginatedProducts" :key="product.id">
                 <div
-                    class="relative  max-h-[400px] card m-10 flex w-full max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md">
+                    class="relative max-h-[400px] card m-10 flex w-full max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md">
                     <router-link :to="{ name: 'ProductDetails', params: { id: product.id } }">
-                        <div class="relative    mx-3 mt-3 flex h-60 overflow-hidden rounded-xl">
-                            <div v-if="product.images?.[0]">
-                                <img loading="lazy" class="object-cover w-full" :src="product.images[0]"
-                                    :alt="(product.title || '').split(' ').slice(0, 2).join(' ')"
-                                    @error="handleImageError" />
-                            </div>
-                            <div v-else>
-                                <img loading="lazy" class="object-cover imgDefault w-full" :src="imgDefault"
-                                    alt="Default Image" />
-                            </div>
+                        <div class="relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl">
+                            <img loading="lazy" class="object-cover w-full" :src="product.images?.[0] || imgDefault"
+                                :alt="(product.title || '').split(' ').slice(0, 2).join(' ')"
+                                @error="handleImageError" />
                         </div>
                     </router-link>
-
                     <div class="mt-4 px-5 pb-5">
                         <h5 class="text-xl tracking-tight text-slate-900">
                             {{ (product.title || '').split(' ').slice(0, 3).join(' ') }}
                         </h5>
-                        <p class="text-center text-gray-400">{{ product.description.split(' ').slice(0, 7).join(' ') }}
+                        <p class="text-center text-gray-400">
+                            {{ product.description.split(' ').slice(0, 7).join(' ') }}
                         </p>
                         <div class="mt-2 mb-5 flex items-center justify-between">
                             <p>
-                                <span class="text-3xl font-bold text-slate-900">{{ product?.price }}</span>
+                                <span class="text-3xl font-bold text-slate-900">{{ product.price }}</span>
                                 <span class="text-sm text-slate-900 line-through">$10</span>
                             </p>
+                            <button @click="addProductToCart(product)"
+                                class="bg-gray-600 flex gap-2 items-center p-5 text-white px-6 py-2 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                Add to Cart
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <p v-else class="text-center text-gray-500">No products available.</p>
+
+        <nav class="flex items-center p-1 justify-center m-8 rounded bg-white space-x-2">
+            <button
+                class="p-2 rounded border text-black bg-white hover:text-white hover:bg-blue-600 hover:border-blue-600"
+                :disabled="currentPage === 1" @click="prevPage">
+                Previous
+            </button>
+            <span class="text-gray-500">Page {{ currentPage }}</span>
+            <button
+                class="p-2 rounded border text-black bg-white hover:text-white hover:bg-blue-600 hover:border-blue-600"
+                :disabled="currentPage === totalPages" @click="nextPage">
+                Next
+            </button>
+        </nav>
     </div>
-
-    <nav class="flex items-center p-1 justify-center m-8 rounded bg-white space-x-2">
-        <button class="p-2 rounded border text-black bg-white hover:text-white hover:bg-blue-600 hover:border-blue-600"
-            :disabled="currentPage === 1" @click="prevPage">
-            Previous
-        </button>
-        <span class="text-gray-500">Page {{ currentPage }}</span>
-        <button class="p-2 rounded border text-black bg-white hover:text-white hover:bg-blue-600 hover:border-blue-600"
-            :disabled="currentPage === totalPages" @click="nextPage">
-            Next
-        </button>
-    </nav>
 </template>
-
+/* *=======================================
+2. Apollo Client to Display Products
+*========================================== */
 <script lang="ts">
 import { gql } from "@apollo/client/core";
 import { useQuery } from "@vue/apollo-composable";
 import { ref, computed, onMounted, watchEffect } from 'vue';
-import imgDefault from '../../assets/istockphoto-1409329028-612x612.jpg';
+import { useRouter } from 'vue-router';
+import { useCartStore } from "../../Stores/CartStore";
 import Loading from '../../components/Loading/Loading.vue';
-import { useProductStore } from '../../Stores/product';
 import Slider from '../../components/Slider/Slider.vue';
 import ImagesStatic from '../Slider/ImagesStatic.vue';
+import imgDefault from '../../assets/istockphoto-1409329028-612x612.jpg';
 
 export default {
-    components: {
-        Loading,
-        Slider,
-        ImagesStatic
-    },
+    components: { Loading, Slider, ImagesStatic },
     setup() {
+        const router = useRouter();
+        const cartStore = useCartStore();
         const GET_PRODUCTS = gql`
         query {
-            products {
-                id
-                title
-                price
-                images
-                description
-            }
+          products {
+            id
+            title
+            price
+            images
+            description
+          }
         }
-        `;
-        const productStore = useProductStore();
+      `;
+
         const { result, error, loading } = useQuery(GET_PRODUCTS);
         const products = ref([]);
         const currentPage = ref(1);
         const itemsPerPage = 8;
 
         const totalPages = computed(() => Math.ceil(products.value.length / itemsPerPage));
-
         const paginatedProducts = computed(() => {
             const start = (currentPage.value - 1) * itemsPerPage;
-            const end = start + itemsPerPage;
-            return products.value.slice(start, end);
+            return products.value.slice(start, start + itemsPerPage);
         });
 
         const handleImageError = (event: Event) => {
-            const img = event.target as HTMLImageElement;
-            if (img.src !== imgDefault) {
-                img.src = imgDefault;
-            }
+            (event.target as HTMLImageElement).src = imgDefault;
         };
 
         const nextPage = () => {
@@ -129,8 +144,27 @@ export default {
             }
         };
 
+        interface Product {
+            id: number;
+            title: string;
+            price: number;
+            images: string[];
+            description: string;
+        }
+
+        const addProductToCart = (product: Product) => {
+            cartStore.addToCart({
+                id: product.id,
+                title: product.title,
+                price: product.price,
+                images: product.images,
+            });
+            alert("Product added to cart 🛒");
+            router.push('/cart');
+        };
+
         watchEffect(() => {
-            if (result.value && result.value.products) {
+            if (result.value?.products) {
                 products.value = result.value.products;
                 localStorage.setItem('products', JSON.stringify(products.value));
             }
@@ -144,9 +178,6 @@ export default {
             }
             if (cachedProducts) {
                 products.value = JSON.parse(cachedProducts);
-            } else if (result.value?.products) {
-                products.value = result.value.products;
-                localStorage.setItem('products', JSON.stringify(products.value));
             }
         });
 
@@ -161,13 +192,15 @@ export default {
             nextPage,
             prevPage,
             handleImageError,
-            productStore,
-            Slider,
-            ImagesStatic
+            cartStore,
+            addProductToCart
         };
-    },
+    }
 };
 </script>
+/* *=======================================
+3. sass code
+*========================================== */
 
 <style lang="scss" scoped>
 @use "../../Variables.scss" as *;
@@ -176,10 +209,8 @@ export default {
     margin: $margin;
     transition: $transition;
 
-
     &:hover {
         border: black 1px solid;
-
     }
 
     img {
@@ -189,8 +220,6 @@ export default {
             transform: $transform;
             filter: $filter;
         }
-
     }
-
 }
 </style>

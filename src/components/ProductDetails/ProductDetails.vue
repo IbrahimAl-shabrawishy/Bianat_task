@@ -1,152 +1,138 @@
-/** ============================================
-table of contents
-================================================
-
-1. Display Single Product from Pinia
-2. ProductStore from Pinia
-3.Scss Code
-
-
-*
-
-/* *=======================================
-1. Display Single Product from Pinia
-*========================================== */
-
-
 <template>
-
     <div v-if="loading">
-        <Loading />
+        loading....
     </div>
-    <div v-else-if="error"> {{ error.message }}</div>
-    <div v-else>
+    <div v-else-if="error">
+        {{ error.message }}
+    </div>
 
-        <div v-if="productStore.product">
+    <div v-else>
+        <div v-if="result.product">
             <div class="bg-gray-100">
                 <div class="container mx-auto px-4 py-8">
                     <div class="flex flex-wrap -mx-4">
                         <!-- Product Images -->
-                        <div class="w-full md:w-1/2 px-4 mb-8">
-                            <img loading="lazy" :src="productStore.product.images[0]" :alt="productStore.product.title"
-                                class=" rounded-lg shadow-md mb-4" id="mainImage">
+                        <div v-if="result.product.images && result.product.images.length > 0"
+                            class="w-full md:w-1/2 px-4 mb-8">
+                            <img :src="result.product.images[0]" :alt="result.product.title"
+                                class="w-full h-auto rounded-lg shadow-md mb-4" id="mainImage" @error="handleImage">
                             <div class="flex gap-4 py-4 justify-center overflow-x-auto">
-                                <img v-for="(image, index) in productStore.product.images" :key="index" :src="image"
-                                    :alt="productStore.product.title"
+                                <img v-for="(image, index) in result.product.images" :key="index" :src="image"
+                                    :alt="result.product.title"
                                     class="size-16 sm:size-20 object-cover rounded-md cursor-pointer opacity-60 hover:opacity-100 transition duration-300"
                                     @click="changeImage(image)" @error="handleImage">
                             </div>
                         </div>
+
                         <!-- Product Details -->
-                        <div class="w-full md:w-1/2 px-4 py-11">
-                            <h2 class="text-3xl font-bold mb-2">{{ productStore.product.title }}</h2>
+                        <div class="w-full md:w-1/2 py-11 px-4">
+                            <h2 class="text-3xl font-bold mb-2">{{ result.product.title }}</h2>
+                            <p class="text-gray-400 mb-4">{{ result.product.title }}</p>
                             <div class="mb-4">
-                                <span class="text-2xl font-bold mr-2">{{ productStore.product.price }}</span>
-                                <span class="text-gray-500 line-through">$100.99</span>
+                                <span class="text-2xl font-bold mr-2">${{ result.product.price }}</span>
+                                <span class="text-gray-500 line-through">$10</span>
                             </div>
-                            <div class="flex items-center mb-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                    class="size-6 text-yellow-500">
-                                    <path fill-rule="evenodd"
-                                        d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                    class="size-6 text-yellow-500">
-                                    <path fill-rule="evenodd"
-                                        d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                    class="size-6 text-yellow-500">
-                                    <path fill-rule="evenodd"
-                                        d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                    class="size-6 text-yellow-500">
-                                    <path fill-rule="evenodd"
-                                        d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                    class="size-6 text-yellow-500">
-                                    <path fill-rule="evenodd"
-                                        d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                                <span class="ml-2 text-gray-600">4.5 (120 reviews)</span>
-                            </div>
-                            <p class="text-gray-400 mb-6">{{ productStore.product.description }}</p>
 
+                            <p class="text-gray-400 mb-6">{{ result.product.description }}</p>
                             <div class="flex space-x-4 mb-6">
-                                <button @click="productStore.addToCart()"
-                                    class="bg-indigo-600 flex gap-2 items-center text-white px-6 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-
+                                <button @click="addProductToCart"
+                                    class="bg-gray-600 flex gap-2 items-center text-white px-6 py-2 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                                     Add to Cart
                                 </button>
 
-
-                                <button @click="productStore.mainPage()"
-                                    class="bg-indigo-600 flex gap-2 items-center text-white px-6 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                <button @click="CartStore.mainPage()"
+                                    class="bg-gray-600 flex gap-2 items-center text-white px-6 py-2 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
 
                                     Main Page
                                 </button>
-
-
                             </div>
 
-
-
+                            <div>
+                                <h3 class="text-lg font-semibold mb-2">Details:</h3>
+                                <ul class="list-disc list-inside text-gray-700">
+                                    <li>Title : {{ result.product.title }}</li>
+                                    <li>Price : ${{ result.product.price }}</li>
+                                    <li>Description : {{ result.product.description.split(' ').splice(0, 3).join(' ') }}
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-
             </div>
-
-
         </div>
-
     </div>
 </template>
 
-
-
-
-
-/* *=======================================
-2. ProductStore from Pinia
-*========================================== */
-
-
 <script>
-import Loading from '../../components/Loading/Loading.vue';
-import { useProductStore } from '../../Stores/product';
+import { useRoute, useRouter } from "vue-router";
+import { useQuery } from "@vue/apollo-composable";
+import { gql } from "@apollo/client/core";
+import { ref } from "vue";
+import imgDefault from '../../assets/istockphoto-1409329028-612x612.jpg';
+import { useCartStore } from '../../Stores/CartStore';
 export default {
-    components: {
-        Loading,
-
-    },
     setup() {
-        const productStore = useProductStore();
+        const router = useRouter();
+        const CartStore = useCartStore();
+        const get_product_Details = gql`
+        query ($id: ID!) {
+          product(id: $id) {
+            title
+            description
+            price
+            images
+          }
+        }
+      `;
+
+        const imageDefault = ref(imgDefault);
+        const route = useRoute();
+        const productId = ref(route.params.id);
+        const { result, error, loading } = useQuery(get_product_Details, {
+            id: productId.value,
+        });
+
+        function handleImage(e) {
+            const img = e.target;
+            if (!img.complete || img.naturalWidth === 0) {
+                img.src = imageDefault.value;
+            }
+        }
 
         function changeImage(newImage) {
             document.getElementById("mainImage").src = newImage;
         }
 
-        return {
-            productStore,
-            changeImage
+
+        function addProductToCart() {
+            if (result.value?.product) {
+                CartStore.addToCart({
+                    id: productId.value,
+                    title: result.value.product.title,
+                    price: result.value.product.price,
+                    image: result.value.product.images[0],
+                });
+                alert("Add Product Successfully 🛒");
+                router.push('/cart');
+            }
         }
 
-    }
+        return {
+            result,
+            error,
+            loading,
+            productId,
+            imageDefault,
+            handleImage,
+            changeImage,
+            CartStore,
+            addProductToCart
+        };
+    },
 };
 </script>
 
-/* *=======================================
-3.Scss Code
-*========================================== */
 <style lang="scss" scoped>
 #mainImage {
     width: 100%;
