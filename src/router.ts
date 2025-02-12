@@ -84,9 +84,9 @@ const router = createRouter({
   routes
 });
 
-// هنا تضيف الكود لضبط العنوان
+
 router.beforeEach((to, from, next) => {
-  const metaTitle = to.meta.title || 'Default Title'; // إذا لم يكن هناك title، استخدم "Default Title"
+  const metaTitle = to.meta.title || 'Default Title'; 
   document.title = metaTitle as string;
   next();
 });

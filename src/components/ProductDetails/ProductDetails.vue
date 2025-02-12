@@ -32,22 +32,10 @@ table of contents
                             <img loading="lazy" :src="productStore.product.images[0]" :alt="productStore.product.title"
                                 class=" rounded-lg shadow-md mb-4" id="mainImage">
                             <div class="flex gap-4 py-4 justify-center overflow-x-auto">
-                                <img loading="lazy" :src="productStore.product.images[1]"
+                                <img v-for="(image, index) in productStore.product.images" :key="index" :src="image"
                                     :alt="productStore.product.title"
                                     class="size-16 sm:size-20 object-cover rounded-md cursor-pointer opacity-60 hover:opacity-100 transition duration-300"
-                                    @click="changeImage(this.src)">
-                                <img loading="lazy" :src="productStore.product.images[2]"
-                                    :alt="productStore.product.title"
-                                    class="size-16 sm:size-20 object-cover rounded-md cursor-pointer opacity-60 hover:opacity-100 transition duration-300"
-                                    @click="changeImage(this.src)">
-                                <img loading="lazy" :src="productStore.product.images[0]"
-                                    :alt="productStore.product.title"
-                                    class="size-16 sm:size-20 object-cover rounded-md cursor-pointer opacity-60 hover:opacity-100 transition duration-300"
-                                    @click="changeImage(this.src)">
-                                <img loading="lazy" :src="productStore.product.images[1]"
-                                    :alt="productStore.product.title"
-                                    class="size-16 sm:size-20 object-cover rounded-md cursor-pointer opacity-60 hover:opacity-100 transition duration-300"
-                                    @click="changeImage(this.src)">
+                                    @click="changeImage(image)" @error="handleImage">
                             </div>
                         </div>
 
@@ -145,9 +133,13 @@ export default {
     setup() {
         const productStore = useProductStore();
 
+        function changeImage(newImage) {
+            document.getElementById("mainImage").src = newImage;
+        }
 
         return {
             productStore,
+            changeImage
         }
 
     }
