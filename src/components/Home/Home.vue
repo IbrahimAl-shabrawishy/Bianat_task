@@ -53,7 +53,7 @@
         <nav class="flex items-center p-1 justify-center m-8 rounded bg-white space-x-2">
             <button
                 class="p-2 rounded border text-black bg-white hover:text-white hover:bg-blue-600 hover:border-blue-600"
-                :disabled="currentPage === 1" @click="prevPage()">
+                :disabled="currentPage === 1" @click="prevPage">
                 Previous
             </button>
             <span class="text-gray-500">Page {{ currentPage }}</span>
@@ -69,7 +69,7 @@
 <script lang="ts">
 import { gql } from "@apollo/client/core";
 import { useQuery } from "@vue/apollo-composable";
-import { ref, computed, onMounted, watchEffect } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useCartStore } from "../../Stores/CartStore";
 import Loading from '../../components/Loading/Loading.vue';
@@ -82,59 +82,52 @@ export default {
     setup() {
         const router = useRouter();
         const cartStore = useCartStore();
-
         const itemsPerPage = 8;
         const currentPage = ref(1);
-        const products = ref([]);
 
         const GET_PRODUCTS = gql`
-            query getProducts($limit: Int, $offset: Int) {
-                products(limit: $limit, offset: $offset) {
-                    id
-                    title
-                    price
-                    images
-                    description
-                }
+        query {
+            products {
+                id
+                title
+                price
+                images
+                description
             }
-        `;
+        }`;
 
-        const { result, error, loading, refetch } = useQuery(GET_PRODUCTS, {
-            limit: itemsPerPage,
-            offset: (currentPage.value - 1) * itemsPerPage,
+        const { result, error, loading, refetch } = useQuery(GET_PRODUCTS);
+
+        const totalPages = computed(() => {
+            return result.value?.products ? Math.ceil(result.value.products.length / itemsPerPage) : 1;
         });
 
-
-
-        const totalPages = computed(() => Math.ceil(result.value?.products?.length / itemsPerPage));
         const paginatedProducts = computed(() => {
+            if (!result.value?.products) return [];
             const start = (currentPage.value - 1) * itemsPerPage;
-            const end = start + itemsPerPage;
-            return products.value.slice(start, end);
+            return result.value.products.slice(start, start + itemsPerPage);
         });
 
         const handleImageError = (event: Event) => {
             (event.target as HTMLImageElement).src = imgDefault;
         };
+
         const nextPage = () => {
             if (currentPage.value < totalPages.value) {
                 currentPage.value++;
-                refetch({
-                    limit: itemsPerPage,
-                    offset: (currentPage.value - 1) * itemsPerPage,
-                });
             }
         };
 
         const prevPage = () => {
             if (currentPage.value > 1) {
                 currentPage.value--;
-                refetch({
-                    limit: itemsPerPage,
-                    offset: (currentPage.value - 1) * itemsPerPage,
-                });
             }
         };
+
+        watch(currentPage, () => {
+            refetch();
+        });
+
         interface Product {
             id: number;
             title: string;
@@ -154,20 +147,12 @@ export default {
             router.push('/cart');
         };
 
-
-        watchEffect(() => {
-            if (result.value?.products) {
-                products.value = result.value.products;
-            }
-        });
-
         return {
-            products,
-            paginatedProducts,
             error,
             loading,
             currentPage,
             totalPages,
+            paginatedProducts,
             imgDefault,
             nextPage,
             prevPage,
