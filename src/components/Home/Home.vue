@@ -1,22 +1,3 @@
-/** ============================================
-table of contents
-================================================
-
-1. Display Products
-2. Apollo Client to Display Products
-3.Scss Code
-
-
-*
-
-/* *=======================================
-1. Display Products
-*========================================== */
-
-
-
-
-
 <template>
     <div v-if="loading">
         <Loading />
@@ -72,7 +53,7 @@ table of contents
         <nav class="flex items-center p-1 justify-center m-8 rounded bg-white space-x-2">
             <button
                 class="p-2 rounded border text-black bg-white hover:text-white hover:bg-blue-600 hover:border-blue-600"
-                :disabled="currentPage === 1" @click="prevPage">
+                :disabled="currentPage === 1" @click="prevPage()">
                 Previous
             </button>
             <span class="text-gray-500">Page {{ currentPage }}</span>
@@ -84,9 +65,7 @@ table of contents
         </nav>
     </div>
 </template>
-/* *=======================================
-2. Apollo Client to Display Products
-*========================================== */
+
 <script lang="ts">
 import { gql } from "@apollo/client/core";
 import { useQuery } from "@vue/apollo-composable";
@@ -103,47 +82,59 @@ export default {
     setup() {
         const router = useRouter();
         const cartStore = useCartStore();
-        const GET_PRODUCTS = gql`
-        query {
-          products {
-            id
-            title
-            price
-            images
-            description
-          }
-        }
-      `;
 
-        const { result, error, loading } = useQuery(GET_PRODUCTS);
-        const products = ref([]);
-        const currentPage = ref(1);
         const itemsPerPage = 8;
+        const currentPage = ref(1);
+        const products = ref([]);
 
-        const totalPages = computed(() => Math.ceil(products.value.length / itemsPerPage));
+        const GET_PRODUCTS = gql`
+            query getProducts($limit: Int, $offset: Int) {
+                products(limit: $limit, offset: $offset) {
+                    id
+                    title
+                    price
+                    images
+                    description
+                }
+            }
+        `;
+
+        const { result, error, loading, refetch } = useQuery(GET_PRODUCTS, {
+            limit: itemsPerPage,
+            offset: (currentPage.value - 1) * itemsPerPage,
+        });
+
+
+
+        const totalPages = computed(() => Math.ceil(result.value?.products?.length / itemsPerPage));
         const paginatedProducts = computed(() => {
             const start = (currentPage.value - 1) * itemsPerPage;
-            return products.value.slice(start, start + itemsPerPage);
+            const end = start + itemsPerPage;
+            return products.value.slice(start, end);
         });
 
         const handleImageError = (event: Event) => {
             (event.target as HTMLImageElement).src = imgDefault;
         };
-
         const nextPage = () => {
             if (currentPage.value < totalPages.value) {
                 currentPage.value++;
-                localStorage.setItem('currentPage', currentPage.value.toString());
+                refetch({
+                    limit: itemsPerPage,
+                    offset: (currentPage.value - 1) * itemsPerPage,
+                });
             }
         };
 
         const prevPage = () => {
             if (currentPage.value > 1) {
                 currentPage.value--;
-                localStorage.setItem('currentPage', currentPage.value.toString());
+                refetch({
+                    limit: itemsPerPage,
+                    offset: (currentPage.value - 1) * itemsPerPage,
+                });
             }
         };
-
         interface Product {
             id: number;
             title: string;
@@ -163,21 +154,10 @@ export default {
             router.push('/cart');
         };
 
+
         watchEffect(() => {
             if (result.value?.products) {
                 products.value = result.value.products;
-                localStorage.setItem('products', JSON.stringify(products.value));
-            }
-        });
-
-        onMounted(() => {
-            const cachedPage = localStorage.getItem('currentPage');
-            const cachedProducts = localStorage.getItem('products');
-            if (cachedPage) {
-                currentPage.value = parseInt(cachedPage, 10);
-            }
-            if (cachedProducts) {
-                products.value = JSON.parse(cachedProducts);
             }
         });
 
@@ -198,9 +178,6 @@ export default {
     }
 };
 </script>
-/* *=======================================
-3. sass code
-*========================================== */
 
 <style lang="scss" scoped>
 @use "../../Variables.scss" as *;
