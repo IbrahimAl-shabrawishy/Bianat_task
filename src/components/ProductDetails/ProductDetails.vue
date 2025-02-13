@@ -69,7 +69,7 @@ import { useRoute, useRouter } from "vue-router";
 import { useQuery } from "@vue/apollo-composable";
 import { gql } from "@apollo/client/core";
 import { ref } from "vue";
-import imgDefault from '../../assets/istockphoto-1409329028-612x612.jpg';
+import imgDefault from '../../assets/qNOjJje.jpeg';
 import { useCartStore } from '../../Stores/CartStore';
 export default {
     setup() {

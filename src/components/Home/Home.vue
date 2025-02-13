@@ -75,7 +75,7 @@ import { useCartStore } from "../../Stores/CartStore";
 import Loading from '../../components/Loading/Loading.vue';
 import Slider from '../../components/Slider/Slider.vue';
 import ImagesStatic from '../Slider/ImagesStatic.vue';
-import imgDefault from '../../assets/istockphoto-1409329028-612x612.jpg';
+import imgDefault from '../../assets/qNOjJje.jpeg';
 
 export default {
     components: { Loading, Slider, ImagesStatic },
