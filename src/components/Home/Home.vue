@@ -22,7 +22,7 @@
                     class="relative max-h-[400px] card m-10 flex w-full max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md">
                     <router-link :to="{ name: 'ProductDetails', params: { id: product.id } }">
                         <div class="relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl">
-                            <img loading="lazy" class="object-cover w-full" :src="product.images?.[0] || imgDefault"
+                            <img loading="lazy" class="object-cover w-full" :src="product?.images?.[0] || imgDefault"
                                 :alt="(product.title || '').split(' ').slice(0, 2).join(' ')"
                                 @error="handleImageError" />
                         </div>
@@ -97,6 +97,8 @@ export default {
         }`;
 
         const { result, error, loading, refetch } = useQuery(GET_PRODUCTS);
+        console.log("result", result.value)
+
 
         const totalPages = computed(() => {
             return result.value?.products ? Math.ceil(result.value.products.length / itemsPerPage) : 1;

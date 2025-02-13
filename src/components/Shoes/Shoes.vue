@@ -60,17 +60,16 @@ export default {
     setup() {
 
         const GET_CATEGORY = gql`
-            query {
-                category(id: 4) {
-                    id
-                    name
-                    image
-                }
-            }
-        `;
+  query getCategory($id: ID!) {
+    category(id: $id) {
+      id
+      name
+      image
+    }
+  }
+`;
 
-
-        const { result, loading, error } = useQuery(GET_CATEGORY);
+        const { result, loading, error } = useQuery(GET_CATEGORY, { id: 1 });
 
 
         const category = ref([]);

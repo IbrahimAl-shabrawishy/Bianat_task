@@ -59,17 +59,16 @@ export default {
     },
     setup() {
         const GET_CATEGORY = gql`
-            query {
-                category(id: 2) {
-                    id
-                    name
-                    image
-                }
-            }
-        `;
+  query getCategory($id: ID!) {
+    category(id: $id) {
+      id
+      name
+      image
+    }
+  }
+`;
 
-
-        const { result, loading, error } = useQuery(GET_CATEGORY);
+        const { result, loading, error } = useQuery(GET_CATEGORY, { id: 18 });
 
 
         const category = ref([]);
@@ -84,10 +83,12 @@ export default {
 
 
         watchEffect(() => {
+            console.log("Fetched Data:", result.value);
             if (result.value && result.value.category) {
                 category.value = result.value.category;
             }
         });
+
 
         return {
             category,
