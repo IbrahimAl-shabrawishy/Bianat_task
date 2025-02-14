@@ -23,27 +23,36 @@
                     <router-link :to="{ name: 'ProductDetails', params: { id: product.id } }">
                         <div class="relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl">
                             <img loading="lazy" class="object-cover w-full" :src="product?.images?.[0] || imgDefault"
-                                :alt="(product.title || '').split(' ').slice(0, 2).join(' ')"
+                                :alt="(product.title || '').split(' ').slice(0, 3).join(' ')"
                                 @error="handleImageError" />
                         </div>
                     </router-link>
                     <div class="mt-4 px-5 pb-5">
                         <h5 class="text-xl tracking-tight text-slate-900">
-                            {{ (product.title || '').split(' ').slice(0, 3).join(' ') }}
+                            {{ (product.title || '').split(' ').slice(0, 5).join(' ') }}
                         </h5>
                         <p class="text-center text-gray-400">
-                            {{ product.description.split(' ').slice(0, 7).join(' ') }}
+                            {{ product.description.split(' ').slice(0, 5).join(' ') }}
                         </p>
                         <div class="mt-2 mb-5 flex items-center justify-between">
                             <p>
-                                <span class="text-3xl font-bold text-slate-900">{{ product.price }}</span>
+                                <span class="text-3xl font-bold text-slate-900">
+                                    {{ product.price }}
+                                </span>
+
                                 <span class="text-sm text-slate-900 line-through">$10</span>
                             </p>
-                            <button @click="addProductToCart(product)"
-                                class="bg-gray-600 flex gap-2 items-center p-5 text-white px-6 py-2 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                Add to Cart
-                            </button>
+                            <div>
+                                <button @click="addProductToCart(product)"
+                                    class="bg-gray-600 flex gap-2 items-center p-5 text-white px-6 py-2 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                    Add to Cart
+                                </button>
+                            </div>
                         </div>
+
+
+
+
                     </div>
                 </div>
             </div>
@@ -97,7 +106,6 @@ export default {
         }`;
 
         const { result, error, loading, refetch } = useQuery(GET_PRODUCTS);
-        console.log("result", result.value)
 
 
         const totalPages = computed(() => {
