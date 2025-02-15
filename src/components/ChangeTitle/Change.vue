@@ -70,7 +70,7 @@ export default {
   }
 `;
 
-        const { result, loading, error } = useQuery(GET_CATEGORY, { id: 18 });
+        const { result, loading, error } = useQuery(GET_CATEGORY, { id: 1 });
 
 
         const category = ref([]);
